@@ -1,0 +1,36 @@
+# Fichiers et dossiers à ignorer lors du build Docker
+
+# Données locales
+server-data/
+logs/
+steamcmd/
+backups/
+
+# Fichiers Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Fichiers de configuration locaux
+.env
+.env.local
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Système
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*

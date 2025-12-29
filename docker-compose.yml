@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  nova-life:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nova-life-server
+    restart: unless-stopped
+    
+    # Variables d'environnement
+    environment:
+      - SERVER_NAME=MonServeur
+      - SERVER_PORT=7777
+      - PING_PORT=7778
+      - STEAM_PORT=27016
+      - QUERY_PORT=27015
+    
+    # Ports exposés
+    ports:
+      - "7777:7777/udp"  # Port du serveur
+      - "7778:7778/udp"  # Port de ping
+      - "27015:27015/udp"  # Port SteamQuery
+      - "27016:27016/udp"  # Port Steam
+    
+    # Volumes persistants
+    volumes:
+      # Dossier contenant les fichiers de votre serveur
+      - ./server-data:/home/novalife/nova-life_server/Servers
+      # Logs du serveur
+      - ./logs:/home/novalife/nova-life_server/logs
+      # Données SteamCMD (pour éviter de retélécharger)
+      - ./steamcmd:/home/novalife/steam_ds
+    
+    # Limites de ressources (optionnel, à ajuster selon vos besoins)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    # Configuration réseau
+    network_mode: bridge
+    
+    # Santé du container
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "nova-life.x86_64"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+# Réseau optionnel personnalisé
+networks:
+  default:
+    driver: bridge
